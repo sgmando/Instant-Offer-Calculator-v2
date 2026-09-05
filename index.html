@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1F3A32" />
+<title>Instant Offer Calculator</title>
+<style>
+:root{--navy:#1f3a32;--blue:#b18a4b;--blue2:#f0e7d7;--ink:#24312c;--muted:#68736e;--line:#d8d2c4;--bg:#f4f1e8;--card:#fffefa;--soft:#faf8f1;--green:#176b4a;--red:#a64035;--gold:#9a773a;--shadow:0 8px 24px rgba(31,58,50,.10)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit}.app{max-width:760px;margin:0 auto;min-height:100vh;padding-bottom:34px}.hero{background:linear-gradient(145deg,#142a24,#1f3a32 54%,#315348);color:#fff;padding:38px 20px 34px;border-radius:0 0 26px 26px;box-shadow:var(--shadow);border-bottom:4px solid #c2a56b}
+.hero h1{margin:0;font-size:27px;line-height:1.08;letter-spacing:-.02em}.hero p{margin:10px 0 0;color:#e9e0cd;font-size:14px;line-height:1.4;font-weight:550}.content{padding:16px 12px}.card{background:var(--card);border:1px solid #e4eaf2;border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:0 4px 14px rgba(16,46,84,.05)}.card h2{font-size:16px;margin:0 0 4px}.card .sub{color:var(--muted);font-size:12px;margin-bottom:13px;line-height:1.4}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin-bottom:11px}.field label{display:block;font-size:12px;font-weight:800;color:#3a4a45;margin:0 0 6px}.field input{width:100%;border:1px solid #cfd9e6;background:#fff;border-radius:12px;padding:12px;color:var(--ink);outline:none}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(177,138,75,.14)}.prefix{position:relative}.prefix span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#667085;font-weight:700}.prefix input{padding-left:27px}
+.results{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--soft)}.metric .k{font-size:11px;text-transform:uppercase;letter-spacing:.045em;color:var(--muted);font-weight:800}.metric .v{font-size:21px;font-weight:900;margin-top:4px;color:var(--navy)}.metric.heroMetric{grid-column:1/-1;background:linear-gradient(145deg,#f5efe2,#fffdf7);border-color:#d8c69c}.metric.heroMetric .v{font-size:30px;color:var(--navy)}.metric .small{font-size:11px;color:var(--muted);margin-top:4px}.good{color:var(--green)!important}
+.row{display:flex;gap:8px;align-items:center}.btn{border:0;border-radius:12px;padding:14px 14px;font-weight:850;cursor:pointer}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#eaf2fb;color:var(--navy);border:1px solid #cee1f6}.btn.danger{background:#fff0ef;color:var(--red);border:1px solid #ffd5d1}.btn.block{width:100%}.downloadBtn{background:var(--navy);color:#fff;border:1px solid var(--navy);font-size:16px;letter-spacing:.01em}.downloadStatus{display:none;margin-top:9px;padding:9px 11px;border-radius:11px;font-size:12px;font-weight:800;text-align:center}.downloadStatus.show{display:block}.downloadStatus.ok{background:#eef9f5;color:#155b43;border:1px solid #b8e5d2}.downloadStatus.need{background:#fff8e8;color:#684300;border:1px solid #f4d58b}.actionStack{display:grid;gap:9px;margin-top:12px}
+.callout{padding:12px;border-radius:13px;background:#fff8e8;border:1px solid #f4d58b;color:#684300;font-size:12px;line-height:1.4;margin-top:10px}.customBox{display:none;margin-top:10px;border-top:1px dashed var(--line);padding-top:12px}.customBox.show{display:block}details{border:1px solid var(--line);border-radius:14px;background:var(--soft);padding:10px 12px}summary{font-weight:850;color:#34443d;cursor:pointer}.tierRow{display:grid;grid-template-columns:1.15fr .85fr .9fr .85fr;gap:6px;align-items:center;margin-top:9px}.tierRow input{width:100%;padding:9px 6px;border:1px solid #cfd9e6;border-radius:9px}.tierHead{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase}.fine{font-size:11px;color:var(--muted);line-height:1.45}.footer{text-align:center;color:#8792a6;font-size:10px;padding:0 20px 22px}
+@media(max-width:410px){.grid2{grid-template-columns:1fr}.metric .v{font-size:18px}.tierRow{grid-template-columns:1fr .8fr .9fr .8fr}.hero{padding:34px 18px 31px}.hero h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hero">
+    <h1>Instant Offer Calculator</h1>
+    <p>Fast as-is seller math formula.</p>
+  </header>
+
+  <main class="content">
+    <div class="card">
+      <h2>Property</h2><div class="sub">Optional details to identify the deal when you download the results.</div>
+      <div class="field"><label>Property address</label><input id="address" type="text" placeholder="123 Main St" autocomplete="off"></div>
+      <div class="grid2">
+        <div class="field"><label>Square feet</label><input id="sqft" type="number" inputmode="decimal" min="0" placeholder="1456"></div>
+        <div class="field"><label>Quick note</label><input id="note" type="text" placeholder="Vacant, tenant, etc."></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>As-Is Values</h2><div class="sub">Enter any values you have. Blank or zero entries are ignored when calculating the average.</div>
+      <div class="grid2">
+        <div class="field"><label>Zillow</label><div class="prefix"><span>$</span><input id="zillow" type="number" inputmode="decimal" min="0" placeholder="0"></div></div>
+        <div class="field"><label>Realtor.com</label><div class="prefix"><span>$</span><input id="realtor" type="number" inputmode="decimal" min="0" placeholder="0"></div></div>
+        <div class="field"><label>Redfin</label><div class="prefix"><span>$</span><input id="redfin" type="number" inputmode="decimal" min="0" placeholder="0"></div></div>
+        <div class="field"><label>Other</label><div class="prefix"><span>$</span><input id="other" type="number" inputmode="decimal" min="0" placeholder="0"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Instant Offer</h2><div class="sub">Uses the tiered exit %, wholesale fee, and opening-offer % from your spreadsheet.</div>
+      <div class="results">
+        <div class="metric"><div class="k">Average As-Is</div><div class="v" id="asisAvg">$0</div><div class="small" id="tierName">Waiting for values</div></div>
+        <div class="metric"><div class="k">Exit Value</div><div class="v" id="exitValue">$0</div><div class="small" id="exitPct">—</div></div>
+        <div class="metric"><div class="k">Wholesale Fee</div><div class="v" id="wholesaleFee">$0</div></div>
+        <div class="metric"><div class="k">Max Buy</div><div class="v good" id="maxBuy">$0</div><div class="small" id="maxBuyPct">—</div></div>
+        <div class="metric heroMetric"><div class="k">Opening Offer Price</div><div class="v" id="offerPrice">$0</div><div class="small" id="offerPct">—</div></div>
+      </div>
+
+      <div class="actionStack">
+        <button class="btn block downloadBtn" id="downloadResultsBtn">Download</button>
+      </div>
+      <div id="downloadStatus" class="downloadStatus"></div>
+
+      <div id="customBox" class="customBox">
+        <div class="callout">Properties over $500,000 use <b>custom assumptions</b>. Enter them below.</div>
+        <div class="grid2" style="margin-top:10px">
+          <div class="field"><label>Custom exit %</label><input id="customExit" type="number" min="0" max="100" step="1" placeholder="70"></div>
+          <div class="field"><label>Custom wholesale fee</label><div class="prefix"><span>$</span><input id="customFee" type="number" min="0" placeholder="40000"></div></div>
+          <div class="field"><label>Custom opening offer %</label><input id="customOffer" type="number" min="0" max="100" step="1" placeholder="85"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>Formula settings</summary>
+        <p class="fine">Defaults copied from the workbook. Change them only if you want your own scale. Your settings are saved on this device.</p>
+        <div class="tierRow tierHead"><span>Value tier</span><span>Exit %</span><span>Fee</span><span>Offer %</span></div>
+        <div id="tierSettings"></div>
+      </details>
+      <div class="row" style="margin-top:12px"><button class="btn danger block" id="resetBtn">Reset Calculator</button></div>
+    </div>
+  </main>
+
+  <div class="footer">Instant Offer Calculator</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>Number.isFinite(n)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n):'$0';
+const num=id=>parseFloat($(id)?.value)||0;
+const pct=n=>`${(n*100).toFixed(1)}%`;
+const STORAGE='instantOfferCalculatorAsIsV1';
+const defaultTiers=[
+  {label:'Under $100k',max:100000,exclusive:true,exit:35,fee:10000,offer:55},
+  {label:'$100k–$200k',max:200000,exit:50,fee:20000,offer:65},
+  {label:'$200k–$300k',max:300000,exit:60,fee:25000,offer:75},
+  {label:'$300k–$400k',max:400000,exit:65,fee:30000,offer:80},
+  {label:'$400k–$500k',max:500000,exit:70,fee:40000,offer:85}
+];
+let state={tiers:JSON.parse(JSON.stringify(defaultTiers)),lastResult:null};
+
+function tierMarkup(){
+  $('tierSettings').innerHTML=state.tiers.map((t,i)=>`<div class="tierRow"><span class="fine"><b>${t.label}</b></span><input aria-label="${t.label} exit percent" class="tierInput" data-i="${i}" data-k="exit" type="number" value="${t.exit}"><input aria-label="${t.label} wholesale fee" class="tierInput" data-i="${i}" data-k="fee" type="number" value="${t.fee}"><input aria-label="${t.label} opening offer percent" class="tierInput" data-i="${i}" data-k="offer" type="number" value="${t.offer}"></div>`).join('');
+  document.querySelectorAll('.tierInput').forEach(el=>el.addEventListener('input',e=>{const i=+e.target.dataset.i,k=e.target.dataset.k;state.tiers[i][k]=parseFloat(e.target.value)||0;save();calcAsIs();}));
+}
+function chooseTier(avg){for(const t of state.tiers){if(t.exclusive ? avg<t.max : avg<=t.max)return t;}return null;}
+function calcAsIs(){
+  const vals=['zillow','realtor','redfin','other'].map(id=>({id,value:num(id)})).filter(x=>x.value>0);
+  const avg=vals.length?vals.reduce((a,b)=>a+b.value,0)/vals.length:0;
+  const t=chooseTier(avg); const custom=avg>500000;
+  $('asisAvg').textContent=money(avg); $('customBox').classList.toggle('show',custom);
+  let exit=0,fee=0,offer=0,label='Waiting for values';
+  if(avg>0 && t){exit=t.exit/100;fee=t.fee;offer=t.offer/100;label=t.label;}
+  else if(custom){exit=num('customExit')/100;fee=num('customFee');offer=num('customOffer')/100;label='Over $500k · Custom';}
+  const exitVal=avg*exit, maxBuy=Math.max(0,exitVal-fee), opening=maxBuy*offer;
+  $('tierName').textContent=label; $('exitValue').textContent=money(exitVal); $('exitPct').textContent=exit?`${(exit*100).toFixed(0)}% of average`:'—';
+  $('wholesaleFee').textContent=money(fee); $('maxBuy').textContent=money(maxBuy); $('maxBuyPct').textContent=avg?`${pct(maxBuy/avg)} of as-is average`:'—';
+  $('offerPrice').textContent=money(opening); $('offerPct').textContent=offer?`${(offer*100).toFixed(0)}% of Max Buy`:'—';
+  state.lastResult={vals,avg,label,exit,fee,offer,exitVal,maxBuy,opening};
+}
+function sourceLabel(id){return {zillow:'Zillow',realtor:'Realtor.com',redfin:'Redfin',other:'Other'}[id]||id;}
+function buildCopyText(){
+  const r=state.lastResult;
+  if(!r || !r.avg)return '';
+  const lines=['INSTANT OFFER RESULTS'];
+  const address=$('address').value.trim(), sf=num('sqft'), note=$('note').value.trim();
+  if(address)lines.push(`Property: ${address}`);
+  if(sf)lines.push(`Sq Ft: ${Math.round(sf).toLocaleString()}`);
+  if(note)lines.push(`Note: ${note}`);
+  lines.push('');
+  lines.push('As-Is Values:');
+  r.vals.forEach(x=>lines.push(`${sourceLabel(x.id)}: ${money(x.value)}`));
+  lines.push('');
+  lines.push(`Average As-Is: ${money(r.avg)}`);
+  lines.push(`Tier: ${r.label}`);
+  lines.push(`Exit Value (${(r.exit*100).toFixed(0)}%): ${money(r.exitVal)}`);
+  lines.push(`Wholesale Fee: ${money(r.fee)}`);
+  lines.push(`Max Buy: ${money(r.maxBuy)}`);
+  lines.push(`Opening Offer (${(r.offer*100).toFixed(0)}% of Max Buy): ${money(r.opening)}`);
+  return lines.join('\n');
+}
+function showDownloadStatus(message,type='ok'){
+  const el=$('downloadStatus');el.textContent=message;el.className=`downloadStatus show ${type}`;
+  clearTimeout(showDownloadStatus.timer);showDownloadStatus.timer=setTimeout(()=>{el.className='downloadStatus';},2400);
+}
+
+function safeFileName(){
+  const address=$('address').value.trim().replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'');
+  return `${address||'Instant-Offer'}-Results.txt`;
+}
+function downloadResults(){
+  calcAsIs(); const text=buildCopyText();
+  if(!text){showDownloadStatus('Enter at least one As-Is value first.','need');return;}
+  const fileName=safeFileName();
+  try{
+    if(window.AndroidApp && typeof window.AndroidApp.downloadText==='function'){
+      window.AndroidApp.downloadText(fileName,text);showDownloadStatus('Results saved to Downloads ✓');return;
+    }
+    const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=fileName;a.style.display='none';
+    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+    showDownloadStatus('Results download started ✓');
+  }catch(e){
+    showDownloadStatus('Could not download results.','need');
+  }
+}
+function save(){
+  const data={tiers:state.tiers,inputs:{}};document.querySelectorAll('input').forEach(el=>{if(el.id&&!el.readOnly)data.inputs[el.id]=el.value;});localStorage.setItem(STORAGE,JSON.stringify(data));
+}
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(STORAGE)||'null');if(d?.tiers?.length===5)state.tiers=d.tiers;if(d?.inputs)Object.entries(d.inputs).forEach(([id,v])=>{if($(id))$(id).value=v;});}catch(e){}
+}
+function resetAll(){if(confirm('Reset all calculator inputs and formula settings?')){localStorage.removeItem(STORAGE);location.reload();}}
+
+load();tierMarkup();calcAsIs();
+document.addEventListener('input',e=>{if(e.target.matches('input')&&!e.target.classList.contains('tierInput')){save();calcAsIs();}});
+document.addEventListener('change',e=>{if(e.target.matches('input')&&!e.target.classList.contains('tierInput')){save();calcAsIs();}});
+$('downloadResultsBtn').addEventListener('click',downloadResults);
+$('resetBtn').addEventListener('click',resetAll);
+</script>
+</body>
+</html>
