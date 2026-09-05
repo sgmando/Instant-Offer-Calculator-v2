@@ -4,6 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#1F3A32" />
+<link rel="manifest" href="manifest.json" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
 <title>Instant Offer Calculator</title>
 <style>
 :root{--navy:#1f3a32;--blue:#b18a4b;--blue2:#f0e7d7;--ink:#24312c;--muted:#68736e;--line:#d8d2c4;--bg:#f4f1e8;--card:#fffefa;--soft:#faf8f1;--green:#176b4a;--red:#a64035;--gold:#9a773a;--shadow:0 8px 24px rgba(31,58,50,.10)}
@@ -14,6 +19,9 @@ button,input{font:inherit}.app{max-width:760px;margin:0 auto;min-height:100vh;pa
 .results{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--soft)}.metric .k{font-size:11px;text-transform:uppercase;letter-spacing:.045em;color:var(--muted);font-weight:800}.metric .v{font-size:21px;font-weight:900;margin-top:4px;color:var(--navy)}.metric.heroMetric{grid-column:1/-1;background:linear-gradient(145deg,#f5efe2,#fffdf7);border-color:#d8c69c}.metric.heroMetric .v{font-size:30px;color:var(--navy)}.metric .small{font-size:11px;color:var(--muted);margin-top:4px}.good{color:var(--green)!important}
 .row{display:flex;gap:8px;align-items:center}.btn{border:0;border-radius:12px;padding:14px 14px;font-weight:850;cursor:pointer}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#eaf2fb;color:var(--navy);border:1px solid #cee1f6}.btn.danger{background:#fff0ef;color:var(--red);border:1px solid #ffd5d1}.btn.block{width:100%}.downloadBtn{background:var(--navy);color:#fff;border:1px solid var(--navy);font-size:16px;letter-spacing:.01em}.downloadStatus{display:none;margin-top:9px;padding:9px 11px;border-radius:11px;font-size:12px;font-weight:800;text-align:center}.downloadStatus.show{display:block}.downloadStatus.ok{background:#eef9f5;color:#155b43;border:1px solid #b8e5d2}.downloadStatus.need{background:#fff8e8;color:#684300;border:1px solid #f4d58b}.actionStack{display:grid;gap:9px;margin-top:12px}
 .callout{padding:12px;border-radius:13px;background:#fff8e8;border:1px solid #f4d58b;color:#684300;font-size:12px;line-height:1.4;margin-top:10px}.customBox{display:none;margin-top:10px;border-top:1px dashed var(--line);padding-top:12px}.customBox.show{display:block}details{border:1px solid var(--line);border-radius:14px;background:var(--soft);padding:10px 12px}summary{font-weight:850;color:#34443d;cursor:pointer}.tierRow{display:grid;grid-template-columns:1.15fr .85fr .9fr .85fr;gap:6px;align-items:center;margin-top:9px}.tierRow input{width:100%;padding:9px 6px;border:1px solid #cfd9e6;border-radius:9px}.tierHead{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase}.fine{font-size:11px;color:var(--muted);line-height:1.45}.footer{text-align:center;color:#8792a6;font-size:10px;padding:0 20px 22px}
+
+.installCard{background:linear-gradient(145deg,#fffdf7,#f5efe2);border:1px solid #d8c69c;border-radius:18px;padding:13px 15px;margin-bottom:12px;box-shadow:0 4px 14px rgba(31,58,50,.06)}
+.installCard.hidden{display:none}.installRow{display:flex;gap:10px;align-items:center}.installText{flex:1}.installTitle{font-size:14px;font-weight:900;color:var(--navy)}.installSub{font-size:11px;line-height:1.35;color:var(--muted);margin-top:3px}.installBtn{background:var(--navy);color:#fff;border:none;border-radius:11px;padding:12px 16px;font-weight:900;white-space:nowrap;cursor:pointer}.installBtn:active{transform:scale(.98)}.installMsg{display:none;margin-top:9px;padding:9px 10px;border-radius:10px;background:#fff8e8;border:1px solid #f4d58b;color:#684300;font-size:11px;font-weight:750;line-height:1.4}.installMsg.show{display:block}
 @media(max-width:410px){.grid2{grid-template-columns:1fr}.metric .v{font-size:18px}.tierRow{grid-template-columns:1fr .8fr .9fr .8fr}.hero{padding:34px 18px 31px}.hero h1{font-size:24px}}
 </style>
 </head>
@@ -25,6 +33,16 @@ button,input{font:inherit}.app{max-width:760px;margin:0 auto;min-height:100vh;pa
   </header>
 
   <main class="content">
+    <div class="installCard" id="installCard">
+      <div class="installRow">
+        <div class="installText">
+          <div class="installTitle">Install on this phone</div>
+          <div class="installSub">Add the calculator to your home screen and open it like an app.</div>
+        </div>
+        <button class="installBtn" id="installAppBtn" type="button">Install App</button>
+      </div>
+      <div class="installMsg" id="installMsg"></div>
+    </div>
     <div class="card">
       <h2>Property</h2><div class="sub">Optional details to identify the deal when you download the results.</div>
       <div class="field"><label>Property address</label><input id="address" type="text" placeholder="123 Main St" autocomplete="off"></div>
@@ -176,6 +194,61 @@ document.addEventListener('input',e=>{if(e.target.matches('input')&&!e.target.cl
 document.addEventListener('change',e=>{if(e.target.matches('input')&&!e.target.classList.contains('tierInput')){save();calcAsIs();}});
 $('downloadResultsBtn').addEventListener('click',downloadResults);
 $('resetBtn').addEventListener('click',resetAll);
+
+
+// PWA install support
+let deferredInstallPrompt = null;
+const installCard = document.getElementById('installCard');
+const installAppBtn = document.getElementById('installAppBtn');
+const installMsg = document.getElementById('installMsg');
+
+function isInstalledApp(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+function showInstallMessage(text){
+  installMsg.textContent = text;
+  installMsg.classList.add('show');
+}
+function hideInstallCardIfInstalled(){
+  if(isInstalledApp()) installCard.classList.add('hidden');
+}
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installAppBtn.textContent = 'Install App';
+});
+
+installAppBtn.addEventListener('click', async () => {
+  if(isInstalledApp()){
+    installCard.classList.add('hidden');
+    return;
+  }
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice;
+    if(choice.outcome === 'accepted'){
+      showInstallMessage('Installing… You can open it from your home screen when Android finishes.');
+      installAppBtn.disabled = true;
+    }
+    deferredInstallPrompt = null;
+    return;
+  }
+  showInstallMessage('In Chrome, tap the ⋮ menu, then choose “Install app” or “Add to Home screen.” If you already added it, open the home-screen icon.');
+});
+
+window.addEventListener('appinstalled', () => {
+  installCard.classList.add('hidden');
+});
+window.matchMedia('(display-mode: standalone)').addEventListener?.('change', hideInstallCardIfInstalled);
+hideInstallCardIfInstalled();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
 </script>
 </body>
 </html>
